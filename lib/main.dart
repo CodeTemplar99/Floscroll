@@ -21,13 +21,16 @@ class FloscrollApp extends StatelessWidget {
         scrollBehavior: const ConstantScrollBehavior(),
         title: 'Floscroll',
         home: Scaffold(
-          appBar: AppBar(
-            title: const Text('Floscroll'),
-            backgroundColor: Colors.teal[800],
-          ),
-          // ignore: todo
-          // TODO: Add a CustomScrollView
-          body: WeeklyForecastList(),
+          body: CustomScrollView(slivers: <Widget>[
+            SliverAppBar(
+              title: const Text('Floscroll'),
+              backgroundColor: Colors.teal[800],
+              pinned: true,
+              // snap: true,
+              expandedHeight: 200.0,
+            ),
+            WeeklyForecastList(),
+          ]),
         ));
   }
 }
@@ -40,74 +43,73 @@ class WeeklyForecastList extends StatelessWidget {
 
     // ignore: todo
     // TODO: Convert this to a SliverList
-    return ListView.builder(
-        itemCount: 7,
-        itemBuilder: (BuildContext context, int index) {
-          final DailyForecast dailyForecast =
-              Server.getDailyForecastByID(index);
-          return Card(
-            child: Row(
-              children: <Widget>[
-                SizedBox(
-                  height: 100.0,
-                  width: 100.0,
-                  child: Stack(
-                    fit: StackFit.expand,
+    return SliverList(
+      delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+        final DailyForecast dailyForecast = Server.getDailyForecastByID(index);
+        return Card(
+          child: Row(
+            children: <Widget>[
+              SizedBox(
+                height: 100.0,
+                width: 100.0,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: <Widget>[
+                    DecoratedBox(
+                      position: DecorationPosition.foreground,
+                      decoration: BoxDecoration(
+                        gradient: RadialGradient(
+                          colors: <Color>[
+                            Colors.grey[800]!,
+                            Colors.transparent
+                          ],
+                        ),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          dailyForecast.imageId,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Text(
+                        dailyForecast.getDate(currentDate.day).toString(),
+                        style: textTheme.headline2,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      DecoratedBox(
-                        position: DecorationPosition.foreground,
-                        decoration: BoxDecoration(
-                          gradient: RadialGradient(
-                            colors: <Color>[
-                              Colors.grey[800]!,
-                              Colors.transparent
-                            ],
-                          ),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.network(
-                            dailyForecast.imageId,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+                      Text(
+                        dailyForecast.getWeekday(currentDate.weekday),
+                        style: textTheme.headline6,
                       ),
-                      Center(
-                        child: Text(
-                          dailyForecast.getDate(currentDate.day).toString(),
-                          style: textTheme.headline2,
-                        ),
-                      ),
+                      const SizedBox(height: 10.0),
+                      Text(dailyForecast.description),
                     ],
                   ),
                 ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          dailyForecast.getWeekday(currentDate.weekday),
-                          style: textTheme.headline6,
-                        ),
-                        const SizedBox(height: 10.0),
-                        Text(dailyForecast.description),
-                      ],
-                    ),
-                  ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  '${dailyForecast.highTemp} | ${dailyForecast.lowTemp} F',
+                  style: textTheme.subtitle1,
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    '${dailyForecast.highTemp} | ${dailyForecast.lowTemp} F',
-                    style: textTheme.subtitle1,
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
+              ),
+            ],
+          ),
+        );
+      }, childCount: 7),
+    );
   }
 }
 
