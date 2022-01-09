@@ -12,22 +12,21 @@ class FloscrollApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         // This is the theme of your application.
         theme: ThemeData.dark(),
-        // Scrolling in Flutter behaves differently depending on the
-        // ScrollBehavior. By default, ScrollBehavior changes depending
-        // on the current platform. For the purposes of this scrolling
-        // workshop, we're using a custom ScrollBehavior so that the
-        // experience is the same for everyone - regardless of the
-        // platform they are using.
         scrollBehavior: const ConstantScrollBehavior(),
         title: 'Floscroll',
         home: Scaffold(
           body: CustomScrollView(slivers: <Widget>[
             SliverAppBar(
-              title: const Text('Floscroll'),
               backgroundColor: Colors.teal[800],
               pinned: true,
-              // snap: true,
               expandedHeight: 200.0,
+              flexibleSpace: FlexibleSpaceBar(
+                title: const Text('Floscroll'),
+                background: Image.network(
+                  headerImage,
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
             WeeklyForecastList(),
           ]),
