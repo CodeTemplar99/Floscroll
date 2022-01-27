@@ -1,9 +1,8 @@
 # floscroll
 
-A new Flutter project.
 
-## Getting Started
 <img width="404" alt="Screenshot 2022-01-27 at 14 08 00" src="https://user-images.githubusercontent.com/36797498/151365479-6ad9724d-c0f3-4543-8dff-1d6ed30b43f0.png">
+## Getting Started
 
 This project is a starting point for a Flutter application.
 
